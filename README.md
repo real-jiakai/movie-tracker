@@ -20,7 +20,7 @@ A minimalist and elegant personal movie watching journal built with modern web t
 
 ## Data Source
 
-All movie data is sourced from [Douban](https://movie.douban.com/), a popular Chinese movie rating platform.
+All movie data is sourced from [Douban](https://douban.com/), a popular Chinese movie rating platform.
 
 ## Acknowledgments
 
