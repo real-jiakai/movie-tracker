@@ -1,110 +1,54 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import MovieCard from '../components/MovieCard.astro';
 import Navigation from '../components/Navigation.astro';
+import { getCollection } from 'astro:content';
 
-// 获取所有电影内容
-const movies = await getCollection('movies');
-
-// 检查和过滤无效数据，只保留"看过"的电影
-const validMovies = movies.filter(movie => {
-  return movie && 
-         movie.data && 
-         typeof movie.data.year === 'number' && 
-         movie.data.status === '看过';
-});
-
-// 按年份分组并排序
-const moviesByYear = validMovies.reduce((acc, movie) => {
-  const year = movie.data.year;
-  if (!acc[year]) {
-    acc[year] = [];
-  }
-  acc[year].push(movie);
-  return acc;
-}, {} as Record<number, typeof movies>);
-
-// 对每年的电影按日期倒序排序
-Object.keys(moviesByYear).forEach(year => {
-  moviesByYear[year].sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-});
+// 获取所有电影
+const allMovies = await getCollection('movies');
 
 // 获取所有年份并排序
-const years = [2025, 2024, 2023, 2022, 2021];
-const currentYear = new Date().getFullYear();
+const years = [...new Set(allMovies.map(movie => {
+  const date = new Date(movie.data.date);
+  return date.getFullYear();
+}))].sort((a, b) => b - a);
+
+// 获取最新年份作为当前年份
+const currentYear = years[0];
+
+// 获取当前年份的电影
+const movies = allMovies
+  .filter(movie => {
+    const date = new Date(movie.data.date);
+    return date.getFullYear() === currentYear;
+  })
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .map(movie => ({
+    title: movie.data.title,
+    date: movie.data.date,
+    rating: movie.data.rating,
+    review: movie.data.review,
+    poster: movie.data.cover,
+    url: movie.data.url
+  }));
 
 // 计算每年的电影数量
 const movieCounts = years.reduce((acc, year) => {
-  acc[year] = moviesByYear[year]?.length || 0;
+  acc[year] = allMovies.filter(movie => {
+    const date = new Date(movie.data.date);
+    return date.getFullYear() === year;
+  }).length;
   return acc;
 }, {} as Record<number, number>);
-
-// 默认封面图
-const DEFAULT_MOVIE_COVER = 'https://s1.ax1x.com/2023/02/08/pSRJ0HS.png';
-
-// 获取最新的年份
-const latestYear = Math.max(...Object.keys(moviesByYear).map(Number));
-
-// 重定向到最新的年份，如果没有电影记录，则使用当前年份
-if (Astro.url.pathname === '/') {
-  return Astro.redirect(`/${latestYear}`);
-}
-
 ---
 
-<Layout title="Jiakai的观影记录">
-  <Navigation years={years} currentYear={currentYear} movieCounts={movieCounts} />
-  
-  <main class="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-8">
-    <div class="container mx-auto px-4">
-      <!-- Movies Grid -->
-      {years.map(year => (
-        <div
-          class="year-content max-w-7xl mx-auto"
-          data-year={year}
-          hidden={currentYear !== year}
-        >
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
-            {moviesByYear[year]?.map(movie => (
-              <a href={movie.data.url} target="_blank" rel="noopener noreferrer"
-                 class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-                <div class="aspect-[2/3] overflow-hidden relative">
-                  <img 
-                    src={movie.data.cover || DEFAULT_MOVIE_COVER} 
-                    alt={movie.data.title}
-                    class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {movie.data.rating > 0 && (
-                    <div class="absolute top-2 right-2 bg-black/60 rounded-full px-2 py-1 text-xs text-white flex items-center">
-                      <span class="text-yellow-400 mr-1">★</span>
-                      <span>{movie.data.rating}</span>
-                    </div>
-                  )}
-                </div>
-                <div class="p-2 sm:p-3">
-                  <h3 class="text-xs sm:text-sm font-bold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-1 mb-1">
-                    {movie.data.title}
-                  </h3>
-                  <div class="text-xs text-gray-500 mb-1 sm:mb-2">
-                    {new Date(movie.data.date).toLocaleDateString('zh-CN', {
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </div>
-                  {movie.data.review && (
-                    <div class="relative group/review">
-                      <p class="text-xs text-gray-600 group-hover/review:line-clamp-none">
-                        {movie.data.review}
-                      </p>
-                      <div class="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white to-transparent group-hover/review:hidden"></div>
-                    </div>
-                  )}
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
+<Layout title={`${currentYear}年度观影`}>
+  <Navigation years={years} currentYear={currentYear} movieCounts={movieCounts} slot="navigation" />
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {movies.map(movie => (
+        <MovieCard {...movie} />
       ))}
     </div>
-  </main>
+  </div>
 </Layout>
