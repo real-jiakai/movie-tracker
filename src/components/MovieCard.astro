@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  date: string;
+  rating: number;
+  review: string;
+  poster: string;
+  url: string;
+}
+
+const { title, date, rating, review, poster, url } = Astro.props;
+
+// 格式化日期
+const formattedDate = new Date(date).toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// 生成星级显示
+const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+---
+
+<a 
+  href={url} 
+  target="_blank" 
+  rel="noopener noreferrer" 
+  class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group"
+>
+  <div class="aspect-[2/3] relative bg-gray-100">
+    <img 
+      src={poster} 
+      alt={title} 
+      class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+    />
+  </div>
+  <div class="p-4">
+    <h2 class="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{title}</h2>
+    <div class="text-yellow-500 mb-2">{stars}</div>
+    <p class="text-gray-600 text-sm mb-2">{formattedDate}</p>
+    <p class="text-gray-700 text-sm line-clamp-3">{review}</p>
+  </div>
+</a>
