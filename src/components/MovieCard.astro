@@ -25,7 +25,7 @@ const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rat
   href={url} 
   target="_blank" 
   rel="noopener noreferrer" 
-  class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group"
+  class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group h-full"
 >
   <div class="aspect-[2/3] relative bg-gray-100">
     <img 
@@ -35,10 +35,16 @@ const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rat
       loading="lazy"
     />
   </div>
-  <div class="p-4">
-    <h2 class="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{title}</h2>
-    <div class="text-yellow-500 mb-2">{stars}</div>
-    <p class="text-gray-600 text-sm mb-2">{formattedDate}</p>
-    <p class="text-gray-700 text-sm line-clamp-3">{review}</p>
+  <div class="p-4 flex flex-col">
+    <h2 class="text-lg font-semibold mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">{title}</h2>
+    <div class="space-y-2">
+      <div class="text-yellow-500">{stars}</div>
+      <p class="text-gray-600 text-sm">{formattedDate}</p>
+      {review && (
+        <p class="text-gray-700 text-sm mt-2 whitespace-pre-line">
+          {review}
+        </p>
+      )}
+    </div>
   </div>
 </a>
