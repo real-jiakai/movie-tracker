@@ -10,11 +10,10 @@ const { years, currentYear, movieCounts } = Astro.props;
 
 <nav aria-label="按年份浏览" class="pb-2">
   <div class="container mx-auto px-4">
-    <div class="overflow-x-auto scrollbar-hide">
-      <ul
-        role="list"
-        class="flex items-center justify-start gap-2 min-w-max px-1 md:justify-center md:px-0"
-      >
+    <ul
+      role="list"
+      class="flex flex-wrap items-center justify-center gap-2"
+    >
         {
           years.map((year) => {
             const count = movieCounts[year] ?? 0;
@@ -47,16 +46,6 @@ const { years, currentYear, movieCounts } = Astro.props;
             );
           })
         }
-      </ul>
-    </div>
+    </ul>
   </div>
 </nav>
-
-<script>
-  // Year pills scroll horizontally on mobile (scrollbar hidden). On older-year
-  // pages the active pill sits off-screen to the right — bring it into view.
-  const active = document.querySelector(
-    'nav[aria-label="按年份浏览"] [aria-current="page"]'
-  );
-  active?.scrollIntoView({ inline: 'center', block: 'nearest' });
-</script>

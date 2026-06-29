@@ -78,15 +78,6 @@
   animation: poster-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── Utilities ──────────────────────────────────────────────────────────────── */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
