@@ -5,9 +5,6 @@
   --color-ink-900: #070b14;
   --color-ink-800: #0b1120;
   --color-ink-700: #0f172a;
-  --color-accent: #818cf8; /* indigo-400 */
-  --color-accent-strong: #6366f1; /* indigo-500 */
-  --color-star: #fbbf24; /* amber-400 */
 
   --shadow-glow: 0 0 0 1px rgb(129 140 248 / 0.35), 0 18px 40px -20px rgb(99 102 241 / 0.55);
 }

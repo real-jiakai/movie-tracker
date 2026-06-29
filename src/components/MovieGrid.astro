@@ -10,14 +10,15 @@ const { movies } = Astro.props;
 ---
 
 <div class="container mx-auto px-4 pb-12 pt-5">
-  <div
+  <ul
     id="movie-grid"
+    role="list"
     class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
   >
     {movies.map((movie) => <MovieCard {...movie} />)}
-  </div>
+  </ul>
 
-  <p id="mg-empty" hidden class="py-16 text-center text-sm text-slate-500">
+  <p id="mg-empty" hidden class="py-16 text-center text-sm text-slate-400">
     没有匹配的记录，换个关键词或筛选条件试试。
   </p>
 </div>
@@ -101,7 +102,10 @@ const { movies } = Astro.props;
     };
 
     grid.querySelectorAll<HTMLImageElement>('img.poster').forEach((img) => {
-      if (img.complete && img.naturalWidth > 0) {
+      // Gate on `complete` alone: a broken image that already errored before this
+      // script ran has complete=true but naturalWidth=0, and its error event won't
+      // fire again — gating on naturalWidth would leave it forever hidden + shimmering.
+      if (img.complete) {
         reveal(img);
       } else {
         img.addEventListener('load', () => reveal(img), { once: true });

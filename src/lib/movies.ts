@@ -4,9 +4,7 @@ export type MovieEntry = CollectionEntry<'movies'>;
 
 /** Flat, presentation-ready shape consumed by MovieCard / MovieGrid. */
 export interface MovieVM {
-  id: string;
   title: string;
-  date: Date;
   /** Localized label, e.g. "2025年2月6日". */
   dateLabel: string;
   /** Machine-readable timestamp for the client-side sort. */
@@ -35,9 +33,7 @@ const yearOf = (entry: MovieEntry): number => entry.data.date.getFullYear();
 function toViewModel(entry: MovieEntry): MovieVM {
   const { data } = entry;
   return {
-    id: entry.id,
     title: data.title,
-    date: data.date,
     dateLabel: dateFormatter.format(data.date),
     sortKey: data.date.getTime(),
     rating: data.rating,

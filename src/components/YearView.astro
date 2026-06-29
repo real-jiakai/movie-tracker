@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from './Navigation.astro';
+import Toolbar from './Toolbar.astro';
+import MovieGrid from './MovieGrid.astro';
+import { moviesForYear, statsForYear, type MovieEntry } from '../lib/movies';
+
+interface Props {
+  year: number;
+  years: number[];
+  counts: Record<number, number>;
+  all: MovieEntry[];
+}
+
+const { year, years, counts, all } = Astro.props;
+const movies = moviesForYear(all, year);
+const stats = statsForYear(movies);
+---
+
+<Layout title={`${year} 年度观影 · Jiakai`} year={year} stats={stats}>
+  <Navigation years={years} currentYear={year} movieCounts={counts} slot="navigation" />
+  <Toolbar />
+  <MovieGrid movies={movies} />
+</Layout>

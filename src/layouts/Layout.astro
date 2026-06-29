@@ -31,7 +31,12 @@ const { title, year, stats } = Astro.props;
   <body
     class="min-h-screen flex flex-col bg-[radial-gradient(120%_120%_at_50%_-10%,#10193180_0%,transparent_55%)] bg-ink-900 text-slate-100 antialiased"
   >
-    <header class="relative">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-lg focus:bg-indigo-600 focus:px-3 focus:py-2 focus:text-sm focus:text-white focus:shadow-glow"
+      >跳到内容</a
+    >
+    <header class="relative isolate">
       {/* soft ambient glow behind the header */}
       <div
         aria-hidden="true"
@@ -42,7 +47,7 @@ const { title, year, stats } = Astro.props;
       <slot name="navigation" />
     </header>
 
-    <main class="flex-grow">
+    <main id="main" class="flex-grow">
       <slot />
     </main>
 

@@ -10,18 +10,21 @@ const ratingLabel = rating.toFixed(1);
 const typeLabel = type === 'tv' ? '剧集' : '电影';
 ---
 
-<a
-  href={url}
-  target="_blank"
-  rel="noopener noreferrer"
+<li
   data-card
   data-title={title.toLowerCase()}
   data-rating={rating}
   data-date={sortKey}
-  aria-label={`${title} · ${ratingLabel} 星 · ${dateLabel}`}
-  class="group block h-full focus:outline-none"
+  class="h-full"
 >
-  <article
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={`${title} · ${ratingLabel} 星 · ${dateLabel}`}
+    class="group block h-full focus:outline-hidden"
+  >
+    <article
     class="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:border-indigo-400/40 group-hover:shadow-glow group-focus-visible:border-indigo-400/60 group-focus-visible:shadow-glow"
   >
     <div class="relative aspect-[2/3] overflow-hidden bg-ink-700">
@@ -67,7 +70,7 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
       >
         {title}
       </h2>
-      <p class="mt-1 text-xs text-slate-500">{dateLabel}</p>
+      <p class="mt-1 text-xs text-slate-400">{dateLabel}</p>
       {
         review && (
           <p class="mt-2 line-clamp-3 whitespace-pre-line text-sm leading-relaxed text-slate-400">
@@ -77,4 +80,5 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
       }
     </div>
   </article>
-</a>
+  </a>
+</li>

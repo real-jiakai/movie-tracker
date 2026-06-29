@@ -1,18 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navigation from '../components/Navigation.astro';
-import Toolbar from '../components/Toolbar.astro';
-import MovieGrid from '../components/MovieGrid.astro';
-import { getViewingData, moviesForYear, statsForYear } from '../lib/movies';
+import YearView from '../components/YearView.astro';
+import { getViewingData } from '../lib/movies';
 
 const { all, years, counts } = await getViewingData();
 const currentYear = years[0];
-const movies = moviesForYear(all, currentYear);
-const stats = statsForYear(movies);
 ---
 
-<Layout title={`${currentYear} 年度观影 · Jiakai`} year={currentYear} stats={stats}>
-  <Navigation years={years} currentYear={currentYear} movieCounts={counts} slot="navigation" />
-  <Toolbar />
-  <MovieGrid movies={movies} />
-</Layout>
+<YearView year={currentYear} years={years} counts={counts} all={all} />
