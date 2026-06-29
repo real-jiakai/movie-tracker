@@ -1,0 +1,84 @@
+---
+// Controls for the client-side gallery. Behavior lives in MovieGrid's script,
+// which reads these by id / data-attribute. Renders as plain, usable markup
+// even before (or without) JS — the script only enhances it.
+const ratingFilters = [
+  { value: 0, label: '全部' },
+  { value: 3, label: '3★+' },
+  { value: 4, label: '4★+' },
+  { value: 5, label: '5★' },
+];
+---
+
+<div class="container mx-auto px-4 pt-4">
+  <div
+    class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between"
+  >
+    {/* Search */}
+    <label class="relative flex-1 sm:max-w-xs">
+      <span class="sr-only">搜索片名</span>
+      <svg
+        aria-hidden="true"
+        class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        id="mg-search"
+        type="search"
+        autocomplete="off"
+        placeholder="搜索片名…"
+        class="w-full rounded-xl border border-white/10 bg-ink-800/70 py-2 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+      />
+    </label>
+
+    <div class="flex flex-wrap items-center gap-3">
+      {/* Rating filter */}
+      <div
+        id="mg-rating"
+        role="group"
+        aria-label="按评分筛选"
+        class="flex items-center gap-1 rounded-xl border border-white/10 bg-ink-800/60 p-1"
+      >
+        {
+          ratingFilters.map((f, i) => (
+            <button
+              type="button"
+              data-rating-filter={f.value}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              class:list={[
+                'rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums transition-colors',
+                i === 0
+                  ? 'bg-indigo-500 text-white'
+                  : 'text-slate-400 hover:text-white',
+              ]}
+            >
+              {f.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {/* Sort */}
+      <label class="flex items-center gap-2 text-xs text-slate-400">
+        <span class="hidden sm:inline">排序</span>
+        <select
+          id="mg-sort"
+          class="rounded-xl border border-white/10 bg-ink-800/70 px-2.5 py-2 text-xs text-slate-100 outline-none transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+        >
+          <option value="date">最近观看</option>
+          <option value="rating">评分最高</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <p id="mg-count" class="mt-2 px-1 text-xs text-slate-500" aria-live="polite"></p>
+</div>

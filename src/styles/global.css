@@ -1,4 +1,111 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* ── Design tokens (Tailwind v4 @theme → available as utilities/vars) ───────── */
+@theme {
+  --color-ink-900: #070b14;
+  --color-ink-800: #0b1120;
+  --color-ink-700: #0f172a;
+  --color-accent: #818cf8; /* indigo-400 */
+  --color-accent-strong: #6366f1; /* indigo-500 */
+  --color-star: #fbbf24; /* amber-400 */
+
+  --shadow-glow: 0 0 0 1px rgb(129 140 248 / 0.35), 0 18px 40px -20px rgb(99 102 241 / 0.55);
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-ink-900);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(129 140 248 / 0.35);
+  }
+}
+
+/* ── Lazy-load: skeleton shimmer + poster fade-in ───────────────────────────── */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes poster-in {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, #182338 8%, #223049 18%, #182338 33%);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.06),
+    transparent
+  );
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.poster {
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Only hide posters up-front when JS can fade them in (the `js` class is set by the
+   head script); without JS the image stays visible so the page degrades gracefully. */
+.js .poster:not(.is-loaded) {
+  opacity: 0;
+  transform: scale(1.05);
+}
+.poster.is-loaded {
+  animation: poster-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Utilities ──────────────────────────────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .js .poster:not(.is-loaded) {
+    opacity: 1;
+    transform: none;
+  }
+  .skeleton::after {
+    display: none;
+  }
+}

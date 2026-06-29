@@ -1,0 +1,112 @@
+---
+import MovieCard from './MovieCard.astro';
+import type { MovieVM } from '../lib/movies';
+
+interface Props {
+  movies: MovieVM[];
+}
+
+const { movies } = Astro.props;
+---
+
+<div class="container mx-auto px-4 pb-12 pt-5">
+  <div
+    id="movie-grid"
+    class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+  >
+    {movies.map((movie) => <MovieCard {...movie} />)}
+  </div>
+
+  <p id="mg-empty" hidden class="py-16 text-center text-sm text-slate-500">
+    没有匹配的记录，换个关键词或筛选条件试试。
+  </p>
+</div>
+
+<script>
+  type SortMode = 'date' | 'rating';
+
+  const grid = document.getElementById('movie-grid');
+  if (grid) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-card]'));
+    const total = cards.length;
+
+    const searchInput = document.getElementById('mg-search') as HTMLInputElement | null;
+    const sortSelect = document.getElementById('mg-sort') as HTMLSelectElement | null;
+    const ratingGroup = document.getElementById('mg-rating');
+    const countEl = document.getElementById('mg-count');
+    const emptyEl = document.getElementById('mg-empty');
+
+    const state = { query: '', minRating: 0, sort: 'date' as SortMode };
+
+    const ratingOf = (el: HTMLElement) => Number(el.dataset.rating ?? 0);
+    const dateOf = (el: HTMLElement) => Number(el.dataset.date ?? 0);
+    const titleOf = (el: HTMLElement) => el.dataset.title ?? '';
+
+    const matches = (el: HTMLElement) =>
+      ratingOf(el) >= state.minRating &&
+      (state.query === '' || titleOf(el).includes(state.query));
+
+    const comparator = (a: HTMLElement, b: HTMLElement) =>
+      state.sort === 'rating'
+        ? ratingOf(b) - ratingOf(a) || dateOf(b) - dateOf(a)
+        : dateOf(b) - dateOf(a);
+
+    function apply() {
+      const visible = cards.filter(matches).sort(comparator);
+      const visibleSet = new Set(visible);
+
+      // Reorder the matching cards; hide the rest.
+      for (const card of visible) grid!.appendChild(card);
+      for (const card of cards) card.style.display = visibleSet.has(card) ? '' : 'none';
+
+      if (emptyEl) emptyEl.hidden = visible.length !== 0;
+      if (countEl) {
+        countEl.textContent =
+          visible.length === total
+            ? `共 ${total} 部`
+            : `${visible.length} / ${total} 部`;
+      }
+    }
+
+    searchInput?.addEventListener('input', () => {
+      state.query = searchInput.value.trim().toLowerCase();
+      apply();
+    });
+
+    sortSelect?.addEventListener('change', () => {
+      state.sort = sortSelect.value === 'rating' ? 'rating' : 'date';
+      apply();
+    });
+
+    ratingGroup?.querySelectorAll<HTMLButtonElement>('[data-rating-filter]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.minRating = Number(btn.dataset.ratingFilter ?? 0);
+        ratingGroup.querySelectorAll<HTMLButtonElement>('[data-rating-filter]').forEach((b) => {
+          const on = b === btn;
+          b.setAttribute('aria-pressed', String(on));
+          b.classList.toggle('bg-indigo-500', on);
+          b.classList.toggle('text-white', on);
+          b.classList.toggle('text-slate-400', !on);
+        });
+        apply();
+      });
+    });
+
+    apply();
+
+    // ── Lazy-load polish: fade each poster in once it has decoded ──────────────
+    const reveal = (img: HTMLImageElement) => {
+      img.classList.add('is-loaded');
+      img.parentElement?.querySelector('.skeleton')?.remove();
+    };
+
+    grid.querySelectorAll<HTMLImageElement>('img.poster').forEach((img) => {
+      if (img.complete && img.naturalWidth > 0) {
+        reveal(img);
+      } else {
+        img.addEventListener('load', () => reveal(img), { once: true });
+        img.addEventListener('error', () => reveal(img), { once: true });
+      }
+    });
+  }
+</script>

@@ -1,56 +1,51 @@
 ---
 import '../styles/global.css';
-import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
 import Footer from '../components/Footer.astro';
+import type { YearStats } from '../lib/movies';
 
 interface Props {
   title: string;
+  year: number;
+  stats: YearStats;
 }
 
-const { title } = Astro.props;
-
-// 获取当前年份
-const currentPath = Astro.url.pathname;
-const currentYear = parseInt(currentPath.split('/')[1]) || new Date().getFullYear();
+const { title, year, stats } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="我的观影记录" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Jiakai 的观影记录 —— 记录看过的电影与剧集" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070b14" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    {/* Flag JS as available before paint so posters can fade in; without JS they stay visible. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
-  <body class="bg-gray-50 min-h-screen flex flex-col">
-    <header class="bg-gray-50">
-      <h1 class="text-2xl sm:text-3xl text-center font-bold text-blue-600 pt-6 pb-2">
-        Jiakai的观影记录
-      </h1>
+  <body
+    class="min-h-screen flex flex-col bg-[radial-gradient(120%_120%_at_50%_-10%,#10193180_0%,transparent_55%)] bg-ink-900 text-slate-100 antialiased"
+  >
+    <header class="relative">
+      {/* soft ambient glow behind the header */}
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(60%_80%_at_50%_0%,rgba(99,102,241,0.18),transparent_70%)]"
+      >
+      </div>
+      <Hero year={year} stats={stats} />
       <slot name="navigation" />
     </header>
-    <main class="bg-gray-50 flex-grow">
+
+    <main class="flex-grow">
       <slot />
     </main>
+
     <Footer />
   </body>
 </html>
-
-<style is:global>
-  :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
-  }
-  html {
-    font-family: system-ui, sans-serif;
-    background-color: rgb(249, 250, 251); /* bg-gray-50 */
-  }
-  code {
-    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-      Bitstream Vera Sans Mono, Courier New, monospace;
-  }
-</style>
