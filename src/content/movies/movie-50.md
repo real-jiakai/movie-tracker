@@ -5,7 +5,7 @@ rating: 3.0
 status: "看过"
 review: "大木田宙人！"
 url: "https://movie.douban.com/subject/37125387/"
-type: "movie"
+type: "tv"
 year: 2026
 isPublic: true
 cover: "https://i.see.you/2026/06/29/Ed3x/20260629012648874.webp"

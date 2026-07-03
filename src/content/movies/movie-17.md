@@ -5,7 +5,7 @@ rating: 3.0
 status: "看过"
 review: "要不然我们就这样一万年。"
 url: "https://movie.douban.com/subject/35501483/"
-type: "movie"
+type: "tv"
 year: 2024
 isPublic: true
 cover: "https://cdn.sa.net/2025/02/10/1otzTklJrdeqQLK.webp"
