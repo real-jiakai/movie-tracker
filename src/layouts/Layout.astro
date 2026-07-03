@@ -8,23 +8,48 @@ interface Props {
   title: string;
   year: number;
   stats: YearStats;
+  description?: string;
+  /** Canonical path for this page; the newest-year page canonicalizes to "/". */
+  canonicalPath?: string;
+  /** Absolute URL used for social link previews. */
+  ogImage?: string;
 }
 
-const { title, year, stats } = Astro.props;
+const {
+  title,
+  year,
+  stats,
+  description = 'Jiakai 的观影记录 —— 记录看过的电影与剧集',
+  canonicalPath = Astro.url.pathname,
+  ogImage,
+} = Astro.props;
+
+const canonicalURL = new URL(canonicalPath, Astro.site);
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Jiakai 的观影记录 —— 记录看过的电影与剧集" />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#070b14" />
     {/* Posters are hotlinked from these image beds — warm the connections up front. */}
     <link rel="preconnect" href="https://cdn.sa.net" />
     <link rel="preconnect" href="https://i.see.you" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jiakai 的观影记录" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
     <title>{title}</title>
     {/* Flag JS as available before paint so posters can fade in; without JS they stay visible. */}
     <script is:inline>

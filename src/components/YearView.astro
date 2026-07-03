@@ -15,9 +15,23 @@ interface Props {
 const { year, years, counts, all } = Astro.props;
 const movies = moviesForYear(all, year);
 const stats = statsForYear(movies);
+
+// The homepage mirrors the newest year, so both URLs canonicalize to "/".
+const canonicalPath = year === years[0] ? '/' : `/${year}/`;
+const description =
+  stats.count > 0
+    ? `${year} 年 Jiakai 看过的 ${stats.count} 部电影与剧集，平均评分 ${stats.avg.toFixed(1)} 星。`
+    : `Jiakai 在 ${year} 年的观影记录。`;
 ---
 
-<Layout title={`${year} 年度观影 · Jiakai`} year={year} stats={stats}>
+<Layout
+  title={`${year} 年度观影 · Jiakai`}
+  year={year}
+  stats={stats}
+  description={description}
+  canonicalPath={canonicalPath}
+  ogImage={movies[0]?.poster}
+>
   <Navigation years={years} currentYear={year} movieCounts={counts} slot="navigation" />
   <Toolbar />
   <MovieGrid movies={movies} />
