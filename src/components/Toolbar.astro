@@ -1,7 +1,13 @@
 ---
 // Controls for the client-side gallery. Behavior lives in MovieGrid's script,
-// which reads these by id / data-attribute. Renders as plain, usable markup
-// even before (or without) JS — the script only enhances it.
+// which reads these by id / data-attribute. The controls only work with JS,
+// so [data-js-only] hides them when it never arrives; the count stays visible.
+interface Props {
+  total: number;
+}
+
+const { total } = Astro.props;
+
 const ratingFilters = [
   { value: 0, label: '全部' },
   { value: 3, label: '3★+' },
@@ -12,6 +18,7 @@ const ratingFilters = [
 
 <div class="container mx-auto px-4 pt-4">
   <div
+    data-js-only
     class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between"
   >
     {/* Search */}
@@ -35,7 +42,7 @@ const ratingFilters = [
         type="search"
         autocomplete="off"
         placeholder="搜索片名…"
-        class="w-full rounded-xl border border-white/10 bg-ink-800/70 py-2 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-400 outline-hidden transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+        class="min-h-11 w-full rounded-xl border border-white/10 bg-ink-800/70 py-2 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-400 outline-hidden transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/80 sm:min-h-0"
       />
     </label>
 
@@ -54,7 +61,7 @@ const ratingFilters = [
               data-rating-filter={f.value}
               aria-pressed={i === 0 ? 'true' : 'false'}
               class:list={[
-                'rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums transition-colors hover:text-white',
+                'inline-flex min-h-11 items-center rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums transition-colors hover:text-white sm:min-h-0',
                 i === 0 ? 'bg-indigo-500 text-white' : 'text-slate-400',
               ]}
             >
@@ -69,7 +76,7 @@ const ratingFilters = [
         <span class="sr-only sm:not-sr-only">排序</span>
         <select
           id="mg-sort"
-          class="rounded-xl border border-white/10 bg-ink-800/70 px-2.5 py-2 text-xs text-slate-100 outline-hidden transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+          class="min-h-11 rounded-xl border border-white/10 bg-ink-800/70 px-2.5 py-2 text-xs text-slate-100 outline-hidden transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/80 sm:min-h-0"
         >
           <option value="date">最近观看</option>
           <option value="rating">评分最高</option>
@@ -78,5 +85,5 @@ const ratingFilters = [
     </div>
   </div>
 
-  <p id="mg-count" class="mt-2 px-1 text-xs text-slate-400" aria-live="polite"></p>
+  <p id="mg-count" class="mt-2 px-1 text-xs text-slate-400" aria-live="polite">共 {total} 部</p>
 </div>

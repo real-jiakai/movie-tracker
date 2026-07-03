@@ -2,6 +2,13 @@
 
 /* ── Design tokens (Tailwind v4 @theme → available as utilities/vars) ───────── */
 @theme {
+  /* System font stack with an explicit CJK chain — no webfont download. */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+
   --color-ink-900: #070b14;
   --color-ink-800: #0b1120;
   --color-ink-700: #0f172a;
@@ -25,6 +32,11 @@
 
   ::selection {
     background: rgb(129 140 248 / 0.35);
+  }
+
+  /* JS-dependent controls (search/filter/sort) — hidden when the head script never ran. */
+  html:not(.js) [data-js-only] {
+    display: none;
   }
 }
 
@@ -76,6 +88,21 @@
 }
 .poster.is-loaded {
   animation: poster-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Styled stand-in for posters whose remote host failed to deliver. */
+.poster-broken .poster {
+  visibility: hidden;
+}
+.poster-broken::before {
+  content: "🎬";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  font-size: 2.25rem;
+  opacity: 0.4;
 }
 
 @media (prefers-reduced-motion: reduce) {

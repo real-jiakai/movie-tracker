@@ -15,7 +15,7 @@ const { movies } = Astro.props;
     role="list"
     class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
   >
-    {movies.map((movie) => <MovieCard {...movie} />)}
+    {movies.map((movie, index) => <MovieCard {...movie} index={index} />)}
   </ul>
 
   <p id="mg-empty" hidden class="py-16 text-center text-sm text-slate-400">
@@ -37,7 +37,15 @@ const { movies } = Astro.props;
     const countEl = document.getElementById('mg-count');
     const emptyEl = document.getElementById('mg-empty');
 
-    const state = { query: '', minRating: 0, sort: 'date' as SortMode };
+    // NFKC folds full-width forms (Ａ → A) so mixed-language titles stay findable.
+    const normalize = (s: string) => s.trim().toLowerCase().normalize('NFKC');
+
+    // Seed from the controls: browsers restore form values on back/forward navigation.
+    const state = {
+      query: searchInput ? normalize(searchInput.value) : '',
+      minRating: 0,
+      sort: (sortSelect?.value === 'rating' ? 'rating' : 'date') as SortMode,
+    };
 
     const ratingOf = (el: HTMLElement) => Number(el.dataset.rating ?? 0);
     const dateOf = (el: HTMLElement) => Number(el.dataset.date ?? 0);
@@ -56,22 +64,48 @@ const { movies } = Astro.props;
       const visible = cards.filter(matches).sort(comparator);
       const visibleSet = new Set(visible);
 
-      // Reorder the matching cards; hide the rest.
-      for (const card of visible) grid!.appendChild(card);
-      for (const card of cards) card.style.display = visibleSet.has(card) ? '' : 'none';
+      // Only touch the DOM when the order actually changed — re-appending nodes
+      // restarts poster animations and forces a full-grid reflow per keystroke.
+      const current = Array.from(grid!.children).filter((el) =>
+        visibleSet.has(el as HTMLElement)
+      );
+      if (visible.some((card, i) => card !== current[i])) {
+        for (const card of visible) grid!.appendChild(card);
+      }
+      for (const card of cards) {
+        const show = visibleSet.has(card) ? '' : 'none';
+        if (card.style.display !== show) card.style.display = show;
+      }
 
       if (emptyEl) emptyEl.hidden = visible.length !== 0;
       if (countEl) {
-        countEl.textContent =
+        const text =
           visible.length === total
             ? `共 ${total} 部`
             : `${visible.length} / ${total} 部`;
+        // Skip identical writes so the aria-live region stays quiet on page load.
+        if (countEl.textContent !== text) countEl.textContent = text;
       }
     }
 
-    searchInput?.addEventListener('input', () => {
-      state.query = searchInput.value.trim().toLowerCase();
+    // IME-aware, debounced search: don't filter on half-composed pinyin.
+    let composing = false;
+    let debounce: ReturnType<typeof setTimeout> | undefined;
+    const onQuery = () => {
+      state.query = searchInput ? normalize(searchInput.value) : '';
       apply();
+    };
+    searchInput?.addEventListener('compositionstart', () => {
+      composing = true;
+    });
+    searchInput?.addEventListener('compositionend', () => {
+      composing = false;
+      onQuery();
+    });
+    searchInput?.addEventListener('input', () => {
+      if (composing) return;
+      clearTimeout(debounce);
+      debounce = setTimeout(onQuery, 120);
     });
 
     sortSelect?.addEventListener('change', () => {
@@ -96,8 +130,10 @@ const { movies } = Astro.props;
     apply();
 
     // ── Lazy-load polish: fade each poster in once it has decoded ──────────────
-    const reveal = (img: HTMLImageElement) => {
+    const reveal = (img: HTMLImageElement, ok: boolean) => {
       img.classList.add('is-loaded');
+      // Swap a failed poster for the styled placeholder instead of the UA broken-image glyph.
+      if (!ok) img.closest('[data-poster-frame]')?.classList.add('poster-broken');
       img.parentElement?.querySelector('.skeleton')?.remove();
     };
 
@@ -106,10 +142,10 @@ const { movies } = Astro.props;
       // script ran has complete=true but naturalWidth=0, and its error event won't
       // fire again — gating on naturalWidth would leave it forever hidden + shimmering.
       if (img.complete) {
-        reveal(img);
+        reveal(img, img.naturalWidth > 0);
       } else {
-        img.addEventListener('load', () => reveal(img), { once: true });
-        img.addEventListener('error', () => reveal(img), { once: true });
+        img.addEventListener('load', () => reveal(img, true), { once: true });
+        img.addEventListener('error', () => reveal(img, false), { once: true });
       }
     });
   }
