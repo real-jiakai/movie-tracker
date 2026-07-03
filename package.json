@@ -2,10 +2,15 @@
   "name": "movie-website",
   "type": "module",
   "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
     "astro": "astro"
   },
   "dependencies": {
@@ -17,5 +22,14 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "typescript": "^6.0.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup": "^4.59.0",
+      "js-yaml": "^4.2.0",
+      "smol-toml": "^1.6.1",
+      "yaml": "^2.8.3",
+      "anymatch>picomatch": "^2.3.2"
+    }
   }
 }
