@@ -21,8 +21,7 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
     href={url}
     target="_blank"
     rel="noopener noreferrer"
-    aria-label={`${title} · ${ratingLabel} 星 · ${dateLabel}`}
-    class="group block h-full focus:outline-hidden"
+    class="group block h-full rounded-2xl focus:outline-hidden focus-visible:ring-4 focus-visible:ring-indigo-400/80"
   >
     <article
     class="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:border-indigo-400/40 group-hover:shadow-glow group-focus-visible:border-indigo-400/60 group-focus-visible:shadow-glow"

@@ -35,7 +35,7 @@ const ratingFilters = [
         type="search"
         autocomplete="off"
         placeholder="搜索片名…"
-        class="w-full rounded-xl border border-white/10 bg-ink-800/70 py-2 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-400 outline-hidden transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+        class="min-h-11 w-full rounded-xl border border-white/10 bg-ink-800/70 py-2 pl-9 pr-3 text-sm text-slate-100 placeholder:text-slate-400 outline-hidden transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/80 sm:min-h-0"
       />
     </label>
 
@@ -54,7 +54,7 @@ const ratingFilters = [
               data-rating-filter={f.value}
               aria-pressed={i === 0 ? 'true' : 'false'}
               class:list={[
-                'rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums transition-colors hover:text-white',
+                'inline-flex min-h-11 items-center rounded-lg px-2.5 py-1 text-xs font-medium tabular-nums transition-colors hover:text-white sm:min-h-0',
                 i === 0 ? 'bg-indigo-500 text-white' : 'text-slate-400',
               ]}
             >
@@ -69,7 +69,7 @@ const ratingFilters = [
         <span class="sr-only sm:not-sr-only">排序</span>
         <select
           id="mg-sort"
-          class="rounded-xl border border-white/10 bg-ink-800/70 px-2.5 py-2 text-xs text-slate-100 outline-hidden transition focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/30"
+          class="min-h-11 rounded-xl border border-white/10 bg-ink-800/70 px-2.5 py-2 text-xs text-slate-100 outline-hidden transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/80 sm:min-h-0"
         >
           <option value="date">最近观看</option>
           <option value="rating">评分最高</option>
