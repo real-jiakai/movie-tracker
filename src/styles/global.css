@@ -2,6 +2,13 @@
 
 /* ── Design tokens (Tailwind v4 @theme → available as utilities/vars) ───────── */
 @theme {
+  /* System font stack with an explicit CJK chain — no webfont download. */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC", "Helvetica Neue", Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+
   --color-ink-900: #070b14;
   --color-ink-800: #0b1120;
   --color-ink-700: #0f172a;

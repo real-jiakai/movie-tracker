@@ -1,34 +1,49 @@
-# Personal Movie Watching Journal
+# Jiakai 的观影记录 · Personal Movie Journal
 
-A minimalist and elegant personal movie watching journal built with modern web technologies.
+A dark, cinematic personal movie & TV journal, live at
+[media.gujiakai.top](https://media.gujiakai.top/).
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) - A modern static site builder
-- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
-- Content Collections - For managing movie data
-- Responsive Design - Optimized for all screen sizes
+- [Astro 7](https://astro.build/) — pure static output, content collections
+- [Tailwind CSS 4](https://tailwindcss.com/) — via `@tailwindcss/vite`
+- Vanilla client-side JS for title search, rating filters and sorting
 
-## Features
+## Commands
 
-- Year-based movie organization
-- Beautiful movie cards with posters
-- Rating system with star display
-- Direct links to Douban movie pages
-- Responsive grid layout
-- Clean and modern UI
+| Command        | Action                                       |
+| -------------- | -------------------------------------------- |
+| `pnpm install` | Install dependencies                         |
+| `pnpm dev`     | Local dev server at `localhost:4321`         |
+| `pnpm build`   | Production build to `./dist/`                |
+| `pnpm check`   | Type-check `.astro` files with `astro check` |
+| `pnpm preview` | Preview the production build locally         |
 
-## Data Source
+The site deploys automatically when `main` is pushed.
 
-All movie data is sourced from [Douban](https://douban.com/), a popular Chinese movie rating platform.
+## Adding an entry
 
-## Acknowledgments
+Create `src/content/movies/movie-<n>.md` — data is entered manually from
+[Douban](https://movie.douban.com/):
 
-Special thanks to:
-- Windsurf Cascade - For excellent AI assistance
-- Claude 3.5 Sonnet - For development guidance
-- Douban - For providing movie data
+```yaml
+---
+title: "片名"
+date: "2026-01-31 21:00:00" # watch date, must not be in the future
+rating: 4.5 # 0–5 in 0.5 steps (Douban half-star scale)
+status: "看过"
+review: "一句话短评。"
+url: "https://movie.douban.com/subject/1234567/"
+type: "movie" # or "tv"
+year: 2026 # must match the year in date
+isPublic: true
+cover: "https://…" # https-only poster URL
+---
+```
+
+The schema in `src/content.config.ts` is strict — typos in field names or
+invalid values fail the build rather than publishing silently.
 
 ## License
 
-MIT License
+[MIT](./LICENSE)
