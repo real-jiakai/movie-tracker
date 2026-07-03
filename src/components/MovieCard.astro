@@ -9,7 +9,10 @@ type Props = MovieVM & {
 const { title, dateLabel, sortKey, rating, review, poster, url, type, index = Infinity } = Astro.props;
 const aboveFold = index < 6;
 
-const fullStars = Math.round(rating);
+// Douban half-star scale: 3.5 renders ★★★ + half, not ★★★★.
+const fullStars = Math.floor(rating);
+const hasHalfStar = rating - fullStars >= 0.5;
+const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 const ratingLabel = rating.toFixed(1);
 const typeLabel = type === 'tv' ? '剧集' : '电影';
 ---
@@ -46,14 +49,14 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
 
       {/* rating chip */}
       <span
-        class="absolute right-2 top-2 z-20 inline-flex items-center gap-0.5 rounded-full bg-black/55 px-2 py-0.5 text-xs font-semibold tabular-nums text-amber-300 ring-1 ring-white/10 backdrop-blur"
+        class="absolute right-2 top-2 z-20 inline-flex items-center gap-0.5 rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold tabular-nums text-amber-300 ring-1 ring-white/10 backdrop-blur"
       >
         <span aria-hidden="true">★</span>{ratingLabel}
       </span>
 
       {/* type tag */}
       <span
-        class="absolute left-2 top-2 z-20 rounded-full bg-black/45 px-2 py-0.5 text-[10px] font-medium tracking-wide text-slate-200 ring-1 ring-white/10 backdrop-blur"
+        class="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-0.5 text-[11px] font-medium tracking-wide text-slate-100 ring-1 ring-white/10 backdrop-blur"
       >
         {typeLabel}
       </span>
@@ -62,9 +65,18 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
       <div
         class="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/85 via-black/30 to-transparent px-3 pb-2.5 pt-8"
       >
-        <div class="text-sm leading-none tracking-tight" aria-hidden="true">
-          <span class="text-amber-400">{'★'.repeat(fullStars)}</span><span
-            class="text-slate-600">{'★'.repeat(5 - fullStars)}</span>
+        <div
+          class="text-sm leading-none tracking-tight"
+          role="img"
+          aria-label={`评分 ${ratingLabel} / 5`}
+        >
+          <span class="text-amber-400">{'★'.repeat(fullStars)}</span>{
+            hasHalfStar && (
+              <span class="relative inline-block text-slate-500">
+                ★<span class="absolute inset-y-0 left-0 w-1/2 overflow-hidden text-amber-400">★</span>
+              </span>
+            )
+          }<span class="text-slate-500">{'★'.repeat(emptyStars)}</span>
         </div>
       </div>
     </div>
