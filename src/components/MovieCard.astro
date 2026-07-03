@@ -19,7 +19,7 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
 
 <li
   data-card
-  data-title={title.toLowerCase()}
+  data-title={title.normalize('NFKC').toLowerCase()}
   data-rating={rating}
   data-date={sortKey}
   class="h-full"

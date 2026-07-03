@@ -33,6 +33,6 @@ const description =
   ogImage={movies[0]?.poster}
 >
   <Navigation years={years} currentYear={year} movieCounts={counts} slot="navigation" />
-  <Toolbar />
+  <Toolbar total={movies.length} />
   <MovieGrid movies={movies} />
 </Layout>

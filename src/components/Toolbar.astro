@@ -1,7 +1,13 @@
 ---
 // Controls for the client-side gallery. Behavior lives in MovieGrid's script,
-// which reads these by id / data-attribute. Renders as plain, usable markup
-// even before (or without) JS — the script only enhances it.
+// which reads these by id / data-attribute. The controls only work with JS,
+// so [data-js-only] hides them when it never arrives; the count stays visible.
+interface Props {
+  total: number;
+}
+
+const { total } = Astro.props;
+
 const ratingFilters = [
   { value: 0, label: '全部' },
   { value: 3, label: '3★+' },
@@ -12,6 +18,7 @@ const ratingFilters = [
 
 <div class="container mx-auto px-4 pt-4">
   <div
+    data-js-only
     class="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3 backdrop-blur sm:flex-row sm:items-center sm:justify-between"
   >
     {/* Search */}
@@ -78,5 +85,5 @@ const ratingFilters = [
     </div>
   </div>
 
-  <p id="mg-count" class="mt-2 px-1 text-xs text-slate-400" aria-live="polite"></p>
+  <p id="mg-count" class="mt-2 px-1 text-xs text-slate-400" aria-live="polite">共 {total} 部</p>
 </div>

@@ -26,6 +26,11 @@
   ::selection {
     background: rgb(129 140 248 / 0.35);
   }
+
+  /* JS-dependent controls (search/filter/sort) — hidden when the head script never ran. */
+  html:not(.js) [data-js-only] {
+    display: none;
+  }
 }
 
 /* ── Lazy-load: skeleton shimmer + poster fade-in ───────────────────────────── */
