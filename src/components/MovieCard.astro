@@ -1,9 +1,13 @@
 ---
 import type { MovieVM } from '../lib/movies';
 
-type Props = MovieVM;
+type Props = MovieVM & {
+  /** Position in the grid — the first row loads eagerly to protect LCP. */
+  index?: number;
+};
 
-const { title, dateLabel, sortKey, rating, review, poster, url, type } = Astro.props;
+const { title, dateLabel, sortKey, rating, review, poster, url, type, index = Infinity } = Astro.props;
+const aboveFold = index < 6;
 
 const fullStars = Math.round(rating);
 const ratingLabel = rating.toFixed(1);
@@ -26,15 +30,17 @@ const typeLabel = type === 'tv' ? '剧集' : '电影';
     <article
     class="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] shadow-lg shadow-black/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:border-indigo-400/40 group-hover:shadow-glow group-focus-visible:border-indigo-400/60 group-focus-visible:shadow-glow"
   >
-    <div class="relative aspect-[2/3] overflow-hidden bg-ink-700">
+    <div data-poster-frame class="relative aspect-[2/3] overflow-hidden bg-ink-700">
       <div class="skeleton absolute inset-0" aria-hidden="true"></div>
       <img
         src={poster}
         alt={`《${title}》海报`}
         width="400"
         height="600"
-        loading="lazy"
+        loading={aboveFold ? 'eager' : 'lazy'}
+        fetchpriority={index < 2 ? 'high' : undefined}
         decoding="async"
+        referrerpolicy="no-referrer"
         class="poster absolute inset-0 z-10 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
       />
 

@@ -20,6 +20,9 @@ const { title, year, stats } = Astro.props;
     <meta name="description" content="Jiakai 的观影记录 —— 记录看过的电影与剧集" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#070b14" />
+    {/* Posters are hotlinked from these image beds — warm the connections up front. */}
+    <link rel="preconnect" href="https://cdn.sa.net" />
+    <link rel="preconnect" href="https://i.see.you" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
