@@ -4,6 +4,7 @@ date: "2025-12-08 16:37:31"
 rating: 5.0
 status: "看过"
 review: "Otay!!!!!"
+reviewLang: "en"
 url: "https://movie.douban.com/subject/1296550/"
 type: "movie"
 year: 2025

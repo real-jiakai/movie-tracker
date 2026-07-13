@@ -4,6 +4,7 @@ date: "2023-06-24 13:06:47"
 rating: 5.0
 status: "看过"
 review: "Life is a box of chocolates. You never know what you're going to get."
+reviewLang: "en"
 url: "https://movie.douban.com/subject/1292720/"
 type: "movie"
 year: 2023

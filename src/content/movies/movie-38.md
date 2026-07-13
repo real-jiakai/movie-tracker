@@ -7,6 +7,7 @@ review: |-
   Q: Why do you think Truman has never come close to discovering the true nature of his world until now?
   A: We accept the reality of the world with which we are presented. It's as simple as that.
   #TheTrumanShow
+reviewLang: "en"
 url: "https://movie.douban.com/subject/1292064/"
 type: "movie"
 year: 2022

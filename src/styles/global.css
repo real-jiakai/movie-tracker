@@ -78,7 +78,10 @@
 }
 
 .poster {
-  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 /* Only hide posters up-front when JS can fade them in (the `js` class is set by the
    head script); without JS the image stays visible so the page degrades gracefully. */

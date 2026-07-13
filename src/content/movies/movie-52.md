@@ -4,6 +4,7 @@ date: "2026-02-21 17:09:09"
 rating: 5.0
 status: "看过"
 review: "Hasta la vista, baby!"
+reviewLang: "es"
 url: "https://movie.douban.com/subject/1291844/"
 type: "movie"
 year: 2026

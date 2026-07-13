@@ -4,6 +4,7 @@ date: "2025-02-12 17:12:34"
 rating: 5.0
 status: "看过"
 review: "okay."
+reviewLang: "en"
 url: "https://movie.douban.com/subject/1295644/"
 type: "movie"
 year: 2025

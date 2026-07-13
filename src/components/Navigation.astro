@@ -5,7 +5,10 @@ interface Props {
   movieCounts: Record<number, number>;
 }
 
+import { getYearPath } from '../lib/route-paths';
+
 const { years, currentYear, movieCounts } = Astro.props;
+const newestYear = years[0];
 ---
 
 <nav aria-label="按年份浏览" class="pb-2">
@@ -21,7 +24,7 @@ const { years, currentYear, movieCounts } = Astro.props;
             return (
               <li>
                 <a
-                  href={`/${year}`}
+                  href={getYearPath(year, newestYear)}
                   aria-current={isActive ? 'page' : undefined}
                   class:list={[
                     'group inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 sm:min-h-0',

@@ -1,9 +1,10 @@
 ---
 import YearView from '../components/YearView.astro';
 import { getViewingData } from '../lib/movies';
+import { getShanghaiYear } from '../lib/watch-date';
 
 const { all, years, counts } = await getViewingData();
-const currentYear = years[0];
+const currentYear = years[0] ?? getShanghaiYear();
 ---
 
-<YearView year={currentYear} years={years} counts={counts} all={all} />
+<YearView year={currentYear} years={years} counts={counts} all={all} isHomepage />

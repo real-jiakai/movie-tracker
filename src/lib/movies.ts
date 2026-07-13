@@ -1,6 +1,7 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from "astro:content";
+import { formatWatchDate, getShanghaiYear } from "./watch-date";
 
-export type MovieEntry = CollectionEntry<'movies'>;
+export type MovieEntry = CollectionEntry<"movies">;
 
 /** Flat, presentation-ready shape consumed by MovieCard / MovieGrid. */
 export interface MovieVM {
@@ -11,9 +12,10 @@ export interface MovieVM {
   sortKey: number;
   rating: number;
   review: string;
+  reviewLang?: "en" | "es";
   poster: string;
   url: string;
-  type: 'movie' | 'tv';
+  type: "movie" | "tv";
 }
 
 export interface YearStats {
@@ -22,22 +24,17 @@ export interface YearStats {
   avg: number;
 }
 
-const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
-
-const yearOf = (entry: MovieEntry): number => entry.data.date.getFullYear();
+const yearOf = (entry: MovieEntry): number => getShanghaiYear(entry.data.date);
 
 function toViewModel(entry: MovieEntry): MovieVM {
   const { data } = entry;
   return {
     title: data.title,
-    dateLabel: dateFormatter.format(data.date),
+    dateLabel: formatWatchDate(data.date),
     sortKey: data.date.getTime(),
     rating: data.rating,
     review: data.review,
+    reviewLang: data.reviewLang,
     poster: data.cover,
     url: data.url,
     type: data.type,
@@ -49,14 +46,17 @@ function toViewModel(entry: MovieEntry): MovieVM {
  * the descending list of years and the per-year counts that drive the nav.
  */
 export async function getViewingData() {
-  const all = (await getCollection('movies', ({ data }) => data.isPublic)).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  const all = (await getCollection("movies", ({ data }) => data.isPublic)).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
   );
 
   const years = [...new Set(all.map(yearOf))].sort((a, b) => b - a);
 
   const counts: Record<number, number> = Object.fromEntries(
-    years.map((year) => [year, all.filter((entry) => yearOf(entry) === year).length])
+    years.map((year) => [
+      year,
+      all.filter((entry) => yearOf(entry) === year).length,
+    ]),
   );
 
   return { all, years, counts };

@@ -97,6 +97,8 @@ const { movies } = Astro.props;
     };
     searchInput?.addEventListener('compositionstart', () => {
       composing = true;
+      clearTimeout(debounce);
+      debounce = undefined;
     });
     searchInput?.addEventListener('compositionend', () => {
       composing = false;

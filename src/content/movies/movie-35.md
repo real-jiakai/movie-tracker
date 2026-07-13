@@ -6,6 +6,7 @@ status: "看过"
 review: |-
   Freedom is the freedom to say two plus two equals four.
   Who controls the past controls the future, who controls the present controls the past.
+reviewLang: "en"
 url: "https://movie.douban.com/subject/1301849/"
 type: "movie"
 year: 2023
